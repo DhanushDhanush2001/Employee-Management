@@ -1,0 +1,24 @@
+const sendToken = (user, statusCode, res) => {
+    // Create Jwt Token
+    const token = user.getJwtToken();
+
+    // Set cookie options
+    const cookieOptions = {
+        expires: new Date(
+            Date.now() + (process.env.COOKIES_EXPIRES_TIME || 1) * 24 * 60 * 60 * 1000 // Default to 7 days if not set
+        ),
+        httpOnly: true,
+    };
+
+    
+    // Set the cookie and return the response
+    res.status(statusCode)
+        .cookie('token', token, cookieOptions)
+        .json({
+            success: true,
+            token,
+            user
+        });
+};
+
+module.exports = sendToken;
